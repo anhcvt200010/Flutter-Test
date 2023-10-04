@@ -1,0 +1,1 @@
+const String notFoundPageContent = 'Tính năng chưa được hỗ trợ';
