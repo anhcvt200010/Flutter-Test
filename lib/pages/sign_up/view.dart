@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
-
+import '../../common/notification/noti.dart';
 import '../../common/styles/color.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -22,10 +22,33 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
-class SignUpView extends StatelessWidget {
-  final DateTime _selectedDate = DateTime.now();
+class SignUpView extends StatefulWidget {
 
   SignUpView({super.key});
+
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
+  final DateTime _selectedDate = DateTime.now();
+  bool checkValidEmail = true;
+  TextEditingController emailController = TextEditingController();
+  String enteredEmail = '';
+
+  bool isEmailValid(String email) {
+    final emailRegExp = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+    );
+
+    return emailRegExp.hasMatch(email);
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +82,7 @@ class SignUpView extends StatelessWidget {
                   "Tên người dùng",
                   style: TextStyle(
                     fontSize: 14,
+                    fontWeight: FontWeight.bold,
                     color: textColor2,
                   ),
                 ),
@@ -82,12 +106,14 @@ class SignUpView extends StatelessWidget {
                   "Email",
                   style: TextStyle(
                     fontSize: 14,
+                    fontWeight: FontWeight.bold,
                     color: textColor2,
                   ),
                 ),
               ),
               const SizedBox(height: 5),
               TextFormField(
+                controller: emailController,
                 decoration: const InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
@@ -98,6 +124,18 @@ class SignUpView extends StatelessWidget {
                   isDense: true,
                 ),
               ),
+              if (!checkValidEmail)
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    "Email không đúng định dạng!!!!!!!",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 15),
               Container(
                 alignment: Alignment.centerLeft,
@@ -105,6 +143,7 @@ class SignUpView extends StatelessWidget {
                   "Mật khẩu",
                   style: TextStyle(
                     fontSize: 14,
+                    fontWeight: FontWeight.bold,
                     color: textColor2,
                   ),
                 ),
@@ -150,7 +189,23 @@ class SignUpView extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/login');
+                  if (this.isEmailValid(emailController.text)) {
+                    setState(() {
+                      checkValidEmail = true;
+                    });
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return NotificationWidget(title: 'SUCCESS', content: 'Bạn đã đăng ký thành công, '
+                              'bạn sẽ được tự động chuyển về trang đăng nhập', followPage: '/login',);
+                      },
+                    );
+                  }
+                  else {
+                    setState(() {
+                      checkValidEmail = false;
+                    });
+                  }
                 },
                 child: const Text(
                   'Đăng ký',
@@ -167,3 +222,5 @@ class SignUpView extends StatelessWidget {
     );
   }
 }
+
+
