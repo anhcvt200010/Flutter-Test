@@ -10,13 +10,13 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink[100],
+        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Colors.white,
           size: 40,
         ),
       ),
-      backgroundColor: Colors.pink[100],
+      backgroundColor: Colors.blueAccent,
       body: SignUpView(),
     );
   }
